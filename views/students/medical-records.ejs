@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records - UMP Health Clinic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors */
+            --primary: #000000;
+            --primary-dark: #3a64ed;
+            --primary-light: #8b92fa;
+            
+            /* Neutral Colors */
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --surface-dark: #F1F5F9;
+            --border: #E2E8F0;
+            --text: #1E293B;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            
+            /* Accent Colors */
+            --accent: #10B981;
+            --accent-red: #EF4444;
+            --accent-orange: #F59E0B;
+            --accent-purple: #8B5CF6;
+            
+            /* Dark Theme */
+            --dark-bg: #0F172A;
+            --dark-surface: #1E293B;
+            --dark-text: #F8FAFC;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --font-size-5xl: 3rem;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--surface);
+            font-size: var(--font-size-base);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--text);
+        }
+
+        h1 { font-size: var(--font-size-4xl); }
+        h2 { font-size: var(--font-size-3xl); }
+        h3 { font-size: var(--font-size-2xl); }
+        h4 { font-size: var(--font-size-xl); }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--surface);
+            border-color: var(--primary);
+        }
+
+        .btn-large {
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: var(--font-size-base);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            padding: var(--spacing-sm) 0;
+            text-align: center;
+            font-size: var(--font-size-sm);
+        }
+
+        .announcement-bar a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            padding: var(--spacing-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-md);
+            position: relative;
+        }
+
+        .logo-icon::after {
+            content: '+';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xl);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        /* Medical Records Page Styles */
+        .medical-records-page {
+            padding: var(--spacing-3xl) 0;
+            flex: 1;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .page-title h1 {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .page-title p {
+            font-size: var(--font-size-lg);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.primary {
+            background-color: rgba(0, 26, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.accent {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .stat-icon.purple {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .stat-number {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .section-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            margin-bottom: var(--spacing-xl);
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: var(--font-size-xl);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .filter-select {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: var(--font-size-sm);
+        }
+
+        .record-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .record-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .record-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .record-card.expanded {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .record-title {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .record-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-lg);
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .record-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .record-status {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .record-details {
+            display: none;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border);
+        }
+
+        .record-details.expanded {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .detail-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .detail-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .detail-content {
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .prescription-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .prescription-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent);
+        }
+
+        .prescription-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .prescription-title {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+            color: var(--accent);
+        }
+
+        .prescription-status {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .prescription-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .prescription-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .prescription-label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .prescription-value {
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-3xl);
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--border);
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .info-value {
+            color: var(--text-muted);
+        }
+
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-sm);
+        }
+
+        .alert-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            color: var(--text);
+        }
+
+        .alert-info {
+            background-color: rgba(0, 26, 255, 0.1);
+            border-left: 4px solid var(--primary);
+            color: var(--text);
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary);
+            background: var(--surface);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            padding: var(--spacing-3xl) 0 var(--spacing-xl);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--spacing-3xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .footer-brand p {
+            margin-top: var(--spacing-md);
+            color: var(--text-light);
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-xl);
+        }
+
+        .link-group h4 {
+            color: var(--dark-text);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .link-group a {
+            display: block;
+            color: var(--text-light);
+            text-decoration: none;
+            margin-bottom: var(--spacing-sm);
+            transition: color 0.2s ease;
+        }
+
+        .link-group a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--spacing-xl);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .footer-emergency {
+            color: var(--accent);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--spacing-md);
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: var(--spacing-lg);
+                box-shadow: var(--shadow-lg);
+                gap: var(--spacing-md);
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-toggle {
+                display: flex;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-md);
+            }
+            
+            .page-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+            }
+            
+            .prescription-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xl);
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .record-header {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .record-meta {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container">
+            <p>🩺 Your medical records are securely stored and accessible anytime. <a href="#privacy">Learn about our privacy policy</a></p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="/" style="text-decoration: none;">
+                    <div class="logo">
+                        <div class="logo-iconas" >
+                            <img 
+                                src="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/University_of_Mpumalanga_logo.svg/1200px-University_of_Mpumalanga_logo.svg.png"
+                                alt="ump icon"
+                                style="width: 50px; height: 50px; object-fit: contain; margin-top: 4px;"
+                            >
+                        </div>
+                        <span style="font-weight: 100;">Clinic</span>
+                    </div>
+                </a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/student" class="nav-link">Dashboard</a>
+                <a href="/student/book-appointment" class="nav-link">Book Appointment</a>
+                <a href="/student/my-appointments" class="nav-link">Appointments</a>
+                <a href="/student/medical-records" class="nav-link active">Records</a>
+                <a href="/student/profile" class="nav-link">Profile</a>
+                <a href="/auth/logout" class="nav-link">Logout</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Medical Records Page Content -->
+    <section class="medical-records-page">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>Medical Records</h1>
+                    <p>Your complete health history and prescription information</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" id="printRecords">
+                        <i class="fas fa-print"></i> Print Records
+                    </button>
+                    <button class="btn btn-secondary" id="exportRecords">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="stat-number"><%= records ? records.length : 0 %></div>
+                    <div class="stat-label">Medical Records</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon accent">
+                        <i class="fas fa-prescription-bottle"></i>
+                    </div>
+                    <div class="stat-number"><%= prescriptions ? prescriptions.length : 0 %></div>
+                    <div class="stat-label">Active Prescriptions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-number"><%= records && records.length > 0 ? Math.floor((new Date() - new Date(records[0].record_date)) / (1000 * 60 * 60 * 24)) : 0 %></div>
+                    <div class="stat-label">Days Since Last Visit</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <!-- Main Content -->
+                <div>
+                    <!-- Medical Records Section -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Medical Consultation Records</h2>
+                            <div class="filter-controls">
+                                <select class="filter-select" id="recordFilter">
+                                    <option value="all">All Records</option>
+                                    <option value="recent">Last 6 Months</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                                <select class="filter-select" id="recordSort">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="record-list">
+                            <% if (records && records.length > 0) { %>
+                                <% records.forEach(function(record, index) { %>
+                                    <div class="record-card" id="record-<%= index %>">
+                                        <div class="record-header">
+                                            <div>
+                                                <div class="record-title"><%= record.diagnosis || 'General Consultation' %></div>
+                                                <div class="record-meta">
+                                                    <div class="record-meta-item">
+                                                        <i class="far fa-calendar"></i>
+                                                        <%= new Date(record.record_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                                                    </div>
+                                                    <% if (record.nurse_name) { %>
+                                                        <div class="record-meta-item">
+                                                            <i class="far fa-user"></i>
+                                                            <%= record.nurse_name %>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <span class="record-status status-completed">Completed</span>
+                                        </div>
+                                        <div class="record-details" id="record-details-<%= index %>">
+                                            <% if (record.symptoms) { %>
+                                                <div class="detail-group">
+                                                    <div class="detail-label">Symptoms Reported</div>
+                                                    <div class="detail-content"><%= record.symptoms %></div>
+                                                </div>
+                                            <% } %>
+                                            <% if (record.diagnosis) { %>
+                                                <div class="detail-group">
+                                                    <div class="detail-label">Diagnosis</div>
+                                                    <div class="detail-content"><%= record.diagnosis %></div>
+                                                </div>
+                                            <% } %>
+                                            <% if (record.treatment) { %>
+                                                <div class="detail-group">
+                                                    <div class="detail-label">Treatment Provided</div>
+                                                    <div class="detail-content"><%= record.treatment %></div>
+                                                </div>
+                                            <% } %>
+                                            <% if (record.consultation_notes) { %>
+                                                <div class="detail-group">
+                                                    <div class="detail-label">Additional Notes</div>
+                                                    <div class="detail-content"><%= record.consultation_notes %></div>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="empty-state">
+                                    <i class="fas fa-file-medical-alt"></i>
+                                    <h3>No Medical Records Found</h3>
+                                    <p>Your medical records will appear here after your consultations with healthcare providers.</p>
+                                    <a href="/student/book-appointment" class="btn btn-primary" style="margin-top: var(--spacing-md);">
+                                        <i class="fas fa-calendar-plus"></i> Book Your First Appointment
+                                    </a>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Prescriptions Section -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2>Current Prescriptions</h2>
+                        </div>
+                        <div class="prescription-grid">
+                            <% if (prescriptions && prescriptions.length > 0) { %>
+                                <% prescriptions.forEach(function(prescription) { %>
+                                    <div class="prescription-card">
+                                        <div class="prescription-header">
+                                            <div class="prescription-title">
+                                                <i class="fas fa-pills"></i> <%= prescription.medication_name %>
+                                            </div>
+                                            <span class="prescription-status">Active</span>
+                                        </div>
+                                        <div class="prescription-details">
+                                            <% if (prescription.dosage) { %>
+                                                <div class="prescription-detail">
+                                                    <span class="prescription-label">Dosage:</span>
+                                                    <span class="prescription-value"><%= prescription.dosage %></span>
+                                                </div>
+                                            <% } %>
+                                            <% if (prescription.frequency) { %>
+                                                <div class="prescription-detail">
+                                                    <span class="prescription-label">Frequency:</span>
+                                                    <span class="prescription-value"><%= prescription.frequency %></span>
+                                                </div>
+                                            <% } %>
+                                            <% if (prescription.instructions) { %>
+                                                <div class="prescription-detail">
+                                                    <span class="prescription-label">Instructions:</span>
+                                                    <span class="prescription-value"><%= prescription.instructions %></span>
+                                                </div>
+                                            <% } %>
+                                            <div class="prescription-detail">
+                                                <span class="prescription-label">Prescribed by:</span>
+                                                <span class="prescription-value"><%= prescription.nurse_name || 'Healthcare Provider' %></span>
+                                            </div>
+                                            <div class="prescription-detail">
+                                                <span class="prescription-label">Date:</span>
+                                                <span class="prescription-value"><%= new Date(prescription.prescribed_date).toLocaleDateString() %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="empty-state">
+                                    <i class="fas fa-prescription-bottle-alt"></i>
+                                    <h3>No Active Prescriptions</h3>
+                                    <p>You don't have any active prescriptions at the moment.</p>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <!-- Emergency Information -->
+                    <div class="sidebar-card">
+                        <h3>Emergency Information</h3>
+                        <% if (user.allergies) { %>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Allergies:</strong> <%= user.allergies %>
+                            </div>
+                        <% } %>
+                        <% if (user.medical_history) { %>
+                            <div class="alert alert-info">
+                                <i class="fas fa-history"></i>
+                                <strong>Medical History:</strong> <%= user.medical_history %>
+                            </div>
+                        <% } %>
+                        <div class="info-item">
+                            <span class="info-label">Blood Type:</span>
+                            <span class="info-value"><%= user.blood_type || 'Not specified' %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Updated:</span>
+                            <span class="info-value"><%= new Date().toLocaleDateString() %></span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="sidebar-card">
+                        <h3>Quick Actions</h3>
+                        <div class="quick-actions">
+                            <a href="/student/book-appointment" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div>
+                                    <div class="action-title">Book Appointment</div>
+                                    <div class="action-desc">Schedule a new consultation</div>
+                                </div>
+                            </a>
+                            <a href="/student/my-appointments" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <div>
+                                    <div class="action-title">View Appointments</div>
+                                    <div class="action-desc">Check upcoming visits</div>
+                                </div>
+                            </a>
+                            <a href="/student/profile" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-user-edit"></i>
+                                </div>
+                                <div>
+                                    <div class="action-title">Update Profile</div>
+                                    <div class="action-desc">Edit medical information</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon"></div>
+                        <span>UMP Health Clinic</span>
+                    </div>
+                    <p>University of Mpumalanga Mbombela Campus Student Health Services</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Services</h4>
+                        <a href="#services">Primary Healthcare</a>
+                        <a href="#services">Mental Health</a>
+                        <a href="#services">Urgent Care</a>
+                        <a href="#services">HIV/TB Services</a>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Resources</h4>
+                        <a href="#resources">Health Education</a>
+                        <a href="#resources">Wellness Programs</a>
+                        <a href="#resources">Emergency Contacts</a>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Student Info</h4>
+                        <a href="#contact">Contact Clinic</a>
+                        <a href="/student">Student Portal</a>
+                        <a href="#">Clinic Policies</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 University of Mpumalanga Student Health Clinic. All rights reserved.</p>
+                <div class="footer-emergency">
+                    <span  style="color: white;">Emergency: Call 013 002 0001 (UMP Emergency) or 10177 (National Emergency)</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            
+            // Animate hamburger menu
+            const spans = navToggle.querySelectorAll('span');
+            spans.forEach((span, index) => {
+                if (navMenu.classList.contains('active')) {
+                    if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    if (index === 1) span.style.opacity = '0';
+                    if (index === 2) span.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    span.style.transform = 'none';
+                    span.style.opacity = '1';
+                }
+            });
+        });
+
+        // Record card expansion functionality
+        document.querySelectorAll('.record-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const recordId = this.id.split('-')[1];
+                const details = document.getElementById(`record-details-${recordId}`);
+                
+                // Close all other expanded records
+                document.querySelectorAll('.record-card').forEach(otherCard => {
+                    if (otherCard !== this) {
+                        otherCard.classList.remove('expanded');
+                        const otherId = otherCard.id.split('-')[1];
+                        document.getElementById(`record-details-${otherId}`).classList.remove('expanded');
+                    }
+                });
+                
+                // Toggle current record
+                this.classList.toggle('expanded');
+                details.classList.toggle('expanded');
+            });
+        });
+
+        // Filter functionality
+        const recordFilter = document.getElementById('recordFilter');
+        const recordSort = document.getElementById('recordSort');
+        
+        recordFilter.addEventListener('change', filterRecords);
+        recordSort.addEventListener('change', filterRecords);
+        
+        function filterRecords() {
+            // In a real application, this would make an API call or filter client-side data
+            console.log('Filtering records by:', recordFilter.value);
+            console.log('Sorting records by:', recordSort.value);
+            
+            // Show loading state
+            const recordList = document.querySelector('.record-list');
+            recordList.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading records...</p></div>';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // This would be replaced with actual filtered data
+                recordList.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><p>Records filtered successfully</p></div>';
+            }, 1000);
+        }
+
+        // Print functionality
+        document.getElementById('printRecords').addEventListener('click', function() {
+            window.print();
+        });
+
+        // Export functionality
+        document.getElementById('exportRecords').addEventListener('click', function() {
+            // In a real application, this would generate a PDF or CSV file
+            alert('Export functionality would generate a PDF of your medical records in a real application.');
+        });
+
+        // Add hover effects to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card, .section-card, .prescription-card, .sidebar-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

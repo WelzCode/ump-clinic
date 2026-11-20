@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - UMP Health Clinic</title>
+    <link rel="stylesheet" href="/styles/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/University_of_Mpumalanga_logo.svg/1200px-University_of_Mpumalanga_logo.svg.png" type="image/x-icon">
+    <style>
+        
+        .valid {
+            color: #198754;
+        }
+        .invalid {
+            color: #dc3545;
+        }
+        .hidden {
+            display: none;
+        }
+        .email-hint {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="content-wrapper">
+                <div class="device-mockup">
+                    <div class="device-frame">
+                        <div class="device-screen">
+                            <div class="app-preview">
+                                <div class="colorful-illustration">
+                                    <div class="illustration-element red"></div>
+                                    <div class="illustration-element orange"></div>
+                                    <div class="illustration-element yellow"></div>
+                                    <div class="illustration-element green"></div>
+                                    <div class="illustration-element blue"></div>
+                                </div>
+                                <div class="preview-text">
+                                    <!-- <h3>UMP Health Clinic</h3>
+                                    <p>Connect with your digital clinic</p> -->
+                                    <div class="password-requirements" id="passwordRequirements" style="display: flex; flex-direction: column; align-items: center; justify-content: left;">
+                                        <div class="requirement invalid" style="display: flex; flex-direction: column; align-items: center; justify-content: left;" id="lengthReq">At least 8 characters</div>
+                                        <div class="requirement invalid" style="display: flex; flex-direction: column; align-items: center; justify-content: left;" id="uppercaseReq">At least one uppercase letter</div>
+                                        <div class="requirement invalid" style="display: flex; flex-direction: column; align-items: center; justify-content: left;" id="lowercaseReq">At least one lowercase letter</div>
+                                        <div class="requirement invalid" style="display: flex; flex-direction: column; align-items: center; justify-content: left;" id="numberReq">At least one number</div>
+                                        <div class="requirement invalid" style="display: flex; flex-direction: column; align-items: center; justify-content: left;" id="specialReq">At least one special character</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="document-preview">
+                        <div class="doc-header">
+                            <h4>UMP Health Clinic</h4>
+                            <div class="doc-subtitle"> login</div>
+                        </div>
+                        <div class="doc-content">
+                            <div class="doc-button"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h2>University Of Mpumalanga</h2>
+                    <p> Committed to developing as an African university providing leadership in knowledge creation.</p>
+                </div>
+                
+                <div class="pagination-dots">
+                    <span class="dot"></span>
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="login-form-wrapper">
+                <%- include('../partials/flash-messages') -%>
+                <% if (typeof registered !== 'undefined' && registered) { %>
+                    <div class="alert alert-success">Registration successful! Please login.</div>
+                <% } %>
+                
+                <div class="login-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/University_of_Mpumalanga_logo.svg/1200px-University_of_Mpumalanga_logo.svg.png" alt="">
+                    <p>Welcome to UMP Health Clinic</p>
+                </div>
+
+                <form  action="/auth/login" method="post" class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Full Names * <div class="form-text invalid hidden" id="nameError" style="font-size: small;">Full name can only contain letters and spaces</div></label>
+                        <input type="text" id="full_name" name="full_name" value="<%= typeof formData !== 'undefined' ? formData.full_name : '' %>"required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Student Number * <div class="form-text" style="font-size: small; color: #999;">Must be 9 digits</div></label>
+                        <input type="text" id="student_number" name="student_number" value="<%= typeof formData !== 'undefined' ? formData.student_number : '' %>" pattern="^2\d{8}$" title="Must be 9 digits starting with 2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">School's Email *</label>
+                        <input type="email" placeholder="Email will be automatically" id="email" name="email" value="<%= typeof formData !== 'undefined' ? formData.email : '' %>" required readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                        <div class="form-text invalid hidden" id="confirmPasswordError" style="font-size: small; color: red;">Passwords do not match</div>
+                    </div>
+
+                    <div class="form-group">
+                        Have an account? <a href="/auth/login" class="create-account" style="text-decoration: none; font-size: small; color: rgb(0, 47, 255);">Click here to login!</a>
+                    </div>
+                    <button type="submit" class="sign-in-btn">Sign Up</button>
+
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const studentNumberInput = document.getElementById('student_number');
+            const emailInput = document.getElementById('email');
+            const fullNameInput = document.getElementById('full_name');
+            const nameError = document.getElementById('nameError');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            
+            // Auto-complete email when student number is entered
+            studentNumberInput.addEventListener('input', function() {
+                const studentNumber = studentNumberInput.value.trim();
+                
+                // Check if student number is valid (9 digits starting with 2)
+                if (/^2\d{8}$/.test(studentNumber)) {
+                    // Generate email address
+                    emailInput.value = studentNumber + '@ump.ac.za';
+                } else {
+                    // Clear email if student number is invalid
+                    emailInput.value = '';
+                }
+            });
+            
+            // Full Name Validation - Only letters and spaces
+            fullNameInput.addEventListener('input', function() {
+                const nameValue = fullNameInput.value;
+                const lettersOnly = /^[A-Za-z\s]+$/;
+                
+                if (nameValue === '') {
+                    nameError.classList.add('hidden');
+                    fullNameInput.classList.remove('is-invalid');
+                } else if (!lettersOnly.test(nameValue)) {
+                    nameError.classList.remove('hidden');
+                    fullNameInput.classList.add('is-invalid');
+                } else {
+                    nameError.classList.add('hidden');
+                    fullNameInput.classList.remove('is-invalid');
+                }
+            });
+            
+            // Password Strength Validation
+            passwordInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+                
+                // Check each requirement
+                const hasMinLength = password.length >= 8;
+                const hasUppercase = /[A-Z]/.test(password);
+                const hasLowercase = /[a-z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                
+                // Update requirement indicators
+                updateRequirement('lengthReq', hasMinLength);
+                updateRequirement('uppercaseReq', hasUppercase);
+                updateRequirement('lowercaseReq', hasLowercase);
+                updateRequirement('numberReq', hasNumber);
+                updateRequirement('specialReq', hasSpecialChar);
+                
+                // Check if passwords match
+                checkPasswordMatch();
+            });
+            
+            // Confirm Password Validation
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+            
+            function checkPasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                
+                if (confirmPassword === '') {
+                    confirmPasswordError.classList.add('hidden');
+                    confirmPasswordInput.classList.remove('is-invalid');
+                } else if (password !== confirmPassword) {
+                    confirmPasswordError.classList.remove('hidden');
+                    confirmPasswordInput.classList.add('is-invalid');
+                } else {
+                    confirmPasswordError.classList.add('hidden');
+                    confirmPasswordInput.classList.remove('is-invalid');
+                }
+            }
+            
+            function updateRequirement(elementId, isValid) {
+                const element = document.getElementById(elementId);
+                if (isValid) {
+                    element.classList.remove('invalid');
+                    element.classList.add('valid');
+                } else {
+                    element.classList.remove('valid');
+                    element.classList.add('invalid');
+                }
+            }
+            
+            // Form submission validation
+            form.addEventListener('submit', function(event) {
+                let isValid = true;
+                
+                // Validate student number
+                const studentNumber = studentNumberInput.value.trim();
+                if (!/^2\d{8}$/.test(studentNumber)) {
+                    studentNumberInput.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    studentNumberInput.classList.remove('is-invalid');
+                }
+                
+                // Validate full name
+                const nameValue = fullNameInput.value;
+                const lettersOnly = /^[A-Za-z\s]+$/;
+                if (!lettersOnly.test(nameValue)) {
+                    nameError.classList.remove('hidden');
+                    fullNameInput.classList.add('is-invalid');
+                    isValid = false;
+                }
+                
+                // Validate password strength
+                const password = passwordInput.value;
+                const hasMinLength = password.length >= 8;
+                const hasUppercase = /[A-Z]/.test(password);
+                const hasLowercase = /[a-z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                
+                if (!(hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar)) {
+                    isValid = false;
+                }
+                
+                // Validate password match
+                const confirmPassword = confirmPasswordInput.value;
+                if (password !== confirmPassword) {
+                    confirmPasswordError.classList.remove('hidden');
+                    confirmPasswordInput.classList.add('is-invalid');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    event.preventDefault();
+                    alert('Please fix the validation errors before submitting the form.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Appointments - UMP Health Clinic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors */
+            --primary: #000000;
+            --primary-dark: #3a64ed;
+            --primary-light: #8b92fa;
+            
+            /* Neutral Colors */
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --surface-dark: #F1F5F9;
+            --border: #E2E8F0;
+            --text: #1E293B;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            
+            /* Accent Colors */
+            --accent: #10B981;
+            --accent-red: #EF4444;
+            --accent-orange: #F59E0B;
+            
+            /* Dark Theme */
+            --dark-bg: #0F172A;
+            --dark-surface: #1E293B;
+            --dark-text: #F8FAFC;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--surface);
+            font-size: var(--font-size-base);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--text);
+        }
+
+        h1 { font-size: var(--font-size-4xl); }
+        h2 { font-size: var(--font-size-3xl); }
+        h3 { font-size: var(--font-size-2xl); }
+        h4 { font-size: var(--font-size-xl); }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--surface);
+            border-color: var(--primary);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-md);
+            font-size: var(--font-size-xs);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            padding: var(--spacing-sm) 0;
+            text-align: center;
+            font-size: var(--font-size-sm);
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            padding: var(--spacing-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-md);
+            position: relative;
+        }
+
+        .logo-icon::after {
+            content: '+';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xl);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        /* Page Styles */
+        .appointments-page {
+            padding: var(--spacing-3xl) 0;
+            flex: 1;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .page-title h2 {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-control, .form-select {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 26, 255, 0.1);
+        }
+
+        .form-text {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .appointments-table th {
+            text-align: left;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+
+        .appointments-table td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .appointment-status {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-scheduled {
+            background-color: rgba(0, 26, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .status-cancelled {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+        }
+
+        .status-no-show {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+        }
+
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--accent);
+            color: var(--text);
+        }
+
+        .alert-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--accent-orange);
+            color: var(--text);
+        }
+
+        .alert-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--accent-red);
+            color: var(--text);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 600px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: var(--font-size-xl);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-md);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--spacing-md);
+            }
+
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--background);
+                padding: var(--spacing-lg);
+                box-shadow: var(--shadow-md);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-md);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        University of Mpumalanga Mbombela Campus Student Health Services
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="/" style="text-decoration: none;">
+                    <div class="logo">
+                        <div class="logo-iconas" >
+                            <img 
+                                src="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/University_of_Mpumalanga_logo.svg/1200px-University_of_Mpumalanga_logo.svg.png"
+                                alt="ump icon"
+                                style="width: 50px; height: 50px; object-fit: contain; margin-top: 4px;"
+                            >
+                        </div>
+                        <span style="font-weight: 100;">Clinic</span>
+                    </div>
+                </a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="/admin/" class="nav-link">Dashboard</a>
+                <a href="/admin/appointments" class="nav-link active">Appointments</a>
+                <a href="/admin/settings" class="nav-link">Services</a>
+                <a href="" class="nav-link">Nurses</a>
+                <a href="/admin/users" class="nav-link">Users</a>
+                <a href="/auth/logout" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="appointments-page">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Manage Appointments</h2>
+                    <p>View and manage all clinic appointments</p>
+                </div>
+                <div class="page-actions">
+                    <a href="/admin/appointments" class="btn btn-secondary">Reset Filter</a>
+                    <button class="btn btn-primary" onclick="document.getElementById('newAppointmentModal').classList.add('active')">
+                        <i class="fas fa-calendar-plus" style="margin-right: 8px;"></i> New Appointment
+                    </button>
+                </div>
+            </div>
+
+            <%- include('../partials/flash-messages') -%>
+
+            <!-- Date Filter -->
+            <div class="card">
+                <div class="form-group">
+                    <form method="GET" class="form-grid" style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--spacing-md);">
+                        <div class="form-group">
+                            <label for="date" class="form-label">Filter by Date</label>
+                            <input type="date" class="form-control" id="date" name="date" value="<%= filterDate %>">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary btn-full">Filter</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">&nbsp;</label>
+                            <a href="/admin/appointments" class="btn btn-secondary btn-full">Reset</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Appointments Table -->
+            <div class="card">
+                <% if (appointments && appointments.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Service</th>
+                                    <th>Date/Time</th>
+                                    <th>Nurse</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% appointments.forEach(function(appointment) { %>
+                                    <tr>
+                                        <td>
+                                            <div class="appointment-title"><%= appointment.student_name %></div>
+                                            <div class="appointment-meta-item" style="font-size: var(--font-size-xs);">
+                                                <i class="fas fa-id-card" style="margin-right: 4px;"></i>
+                                                <%= appointment.student_id %>
+                                            </div>
+                                        </td>
+                                        <td><%= appointment.service_name %></td>
+                                        <td>
+                                            <div class="appointment-meta-item">
+                                                <i class="far fa-calendar" style="margin-right: 4px;"></i>
+                                                <%= new Date(appointment.appointment_date).toLocaleDateString() %>
+                                            </div>
+                                            <div class="appointment-meta-item">
+                                                <i class="far fa-clock" style="margin-right: 4px;"></i>
+                                                <%= appointment.appointment_time %>
+                                            </div>
+                                        </td>
+                                        <td><%= appointment.nurse_name || 'Not assigned' %></td>
+                                        <td>
+                                            <form action="/admin/appointments/<%= appointment.id %>/status" method="POST" class="d-inline">
+                                                <select name="status" class="form-select" onchange="this.form.submit()">
+                                                    <option value="scheduled" <%= appointment.status === 'scheduled' ? 'selected' : '' %>>Scheduled</option>
+                                                    <option value="completed" <%= appointment.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                                                    <option value="cancelled" <%= appointment.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                                    <option value="no-show" <%= appointment.status === 'no-show' ? 'selected' : '' %>>No Show</option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">
+                        <i class="far fa-calendar-times"></i>
+                        <h4>No appointments found</h4>
+                        <p>No appointments found for <%= filterDate ? filterDate : 'the selected criteria' %>.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Appointment Modal -->
+    <div class="modal" id="newAppointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Appointment</h3>
+                <button class="modal-close" onclick="document.getElementById('newAppointmentModal').classList.remove('active')">&times;</button>
+            </div>
+            <form action="/admin/appointments" method="POST">
+                <div class="modal-body">
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+                        <div class="form-group">
+                            <label for="student_number" class="form-label">Student Number *</label>
+                            <input type="text" class="form-control" id="student_number" name="student_number" 
+                                   placeholder="Enter student number" required
+                                   pattern="[0-9]+" title="Please enter a valid student number">
+                            <div class="form-text">Enter Student Nr: <span id="studentName" style="font-size: small; color: #035300;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="service_id" class="form-label">Service *</label>
+                            <select class="form-select" id="service_id" name="service_id" required>
+                                <option value="">Select Service...</option>
+                                <option value="4">General Consultation</option>
+                                <% services.forEach(function(service) { %>
+                                    <% if (service.is_active) { %>
+                                        <option value="<%= service.id %>"><%= service.name %></option>
+                                    <% } %>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+                        <div class="form-group">
+                            <label for="appointment_date" class="form-label">Date *</label>
+                            <input type="date" class="form-control" id="appointment_date" name="appointment_date" 
+                                   min="<%= new Date().toISOString().split('T')[0] %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointment_time" class="form-label">Time *</label>
+                            <input type="time" class="form-control" id="appointment_time" name="appointment_time" 
+                                   step="1800" required>
+                            <div class="form-text">Clinic hours: <%= settings.opening_time || '09:00' %> - <%= settings.closing_time || '17:00' %></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nurse_id" class="form-label">Assign Nurse (Optional)</label>
+                        <select class="form-select" id="nurse_id" name="nurse_id">
+                            <option value="">Not assigned</option>
+                            <% nurses.forEach(function(nurse) { %>
+                                <option value="<%= nurse.id %>"><%= nurse.full_name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('newAppointmentModal').classList.remove('active')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="createAppointmentBtn">
+                        <i class="fas fa-calendar-plus" style="margin-right: 8px;"></i> Create Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') -%>
+
+    <script>
+        // Mobile Navigation Toggle
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const spans = navToggle.querySelectorAll('span');
+            spans.forEach((span, index) => {
+                if (navMenu.classList.contains('active')) {
+                    if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
+                    if (index === 1) span.style.opacity = '0';
+                    if (index === 2) span.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                } else {
+                    span.style.transform = 'none';
+                    span.style.opacity = '1';
+                }
+            });
+        });
+
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                const spans = navToggle.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.transform = 'none';
+                    span.style.opacity = '1';
+                });
+            });
+        });
+
+        // Student number validation and auto-complete
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentNumberInput = document.getElementById('student_number');
+            const studentInfo = document.getElementById('studentInfo');
+            const studentName = document.getElementById('studentName');
+            const createAppointmentBtn = document.getElementById('createAppointmentBtn');
+            let currentStudentId = null;
+
+            // Validate student number in real-time
+            studentNumberInput.addEventListener('blur', validateStudentNumber);
+            studentNumberInput.addEventListener('input', function() {
+                studentInfo.style.display = 'none';
+                currentStudentId = null;
+            });
+
+            // Check for existing appointment when date changes
+            document.getElementById('appointment_date')?.addEventListener('change', checkExistingAppointment);
+
+            async function validateStudentNumber() {
+                const studentNumber = studentNumberInput.value.trim();
+                
+                if (!studentNumber) {
+                    studentInfo.style.display = 'none';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/admin/check-student?student_number=${studentNumber}`);
+                    const data = await response.json();
+                    
+                    if (data.exists) {
+                        studentName.textContent = data.student.full_name;
+                        studentInfo.style.display = 'block';
+                        studentInfo.className = 'alert alert-success';
+                        currentStudentId = data.student.id;
+                        checkExistingAppointment();
+                    } else {
+                        studentInfo.innerHTML = `<i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i> Student not found`;
+                        studentInfo.style.display = 'block';
+                        studentInfo.className = 'alert alert-danger';
+                        currentStudentId = null;
+                    }
+                } catch (error) {
+                    console.error('Error validating student:', error);
+                    studentInfo.innerHTML = `<i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i> Error validating student`;
+                    studentInfo.style.display = 'block';
+                    studentInfo.className = 'alert alert-danger';
+                }
+            }
+
+            async function checkExistingAppointment() {
+                const studentNumber = studentNumberInput.value.trim();
+                const appointmentDate = document.getElementById('appointment_date')?.value;
+                
+                if (!studentNumber || !appointmentDate || !currentStudentId) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/admin/check-student-appointment?student_id=${currentStudentId}&date=${appointmentDate}`);
+                    const data = await response.json();
+                    
+                    if (data.hasAppointment) {
+                        studentInfo.innerHTML = `
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> 
+                            ${data.student.full_name} - Already has appointment on ${appointmentDate}
+                        `;
+                        studentInfo.style.display = 'block';
+                        studentInfo.className = 'alert alert-warning';
+                    } else {
+                        studentInfo.innerHTML = `
+                            <i class="fas fa-check-circle" style="margin-right: 8px;"></i> 
+                            ${data.student.full_name} - Available on ${appointmentDate}
+                        `;
+                        studentInfo.style.display = 'block';
+                        studentInfo.className = 'alert alert-success';
+                    }
+                } catch (error) {
+                    console.error('Error checking appointment:', error);
+                }
+            }
+
+            // Form validation before submission
+            document.querySelector('form[action="/admin/appointments"]')?.addEventListener('submit', function(e) {
+                const studentNumber = studentNumberInput.value.trim();
+                const appointmentDate = document.getElementById('appointment_date')?.value;
+                const appointmentTime = document.getElementById('appointment_time')?.value;
+                
+                if (!studentNumber || !appointmentDate || !appointmentTime) {
+                    e.preventDefault();
+                    alert('Please fill all required fields');
+                    return;
+                }
+
+                // Validate time is within clinic hours
+                const openingTime = '<%= settings.opening_time || "09:00" %>';
+                const closingTime = '<%= settings.closing_time || "17:00" %>';
+                
+                if (appointmentTime < openingTime || appointmentTime > closingTime) {
+                    e.preventDefault();
+                    alert(`Appointment time must be between ${openingTime} and ${closingTime}`);
+                    return;
+                }
+
+                // Show loading state
+                createAppointmentBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Creating...';
+                createAppointmentBtn.disabled = true;
+            });
+
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Add animation to status select
+            document.querySelectorAll('.form-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    this.style.animation = 'pulse 0.3s';
+                    setTimeout(() => {
+                        this.style.animation = '';
+                    }, 300);
+                });
+            });
+        });
+
+        // Pulse animation for status select
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

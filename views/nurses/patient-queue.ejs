@@ -1,0 +1,90 @@
+<%- include('../partials/header', { title: 'Patient Queue' }) -%>
+<%- include('../partials/navigation') -%>
+<%- include('../partials/flash-messages') -%>
+
+<div class="container mt-4">
+    <h2>Patient Queue - <%= today %></h2>
+    
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Scheduled Appointments</h5>
+                </div>
+                <div class="card-body">
+                    <% if (appointments && appointments.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Student</th>
+                                        <th>Service</th>
+                                        <th>Nurse</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% appointments.forEach(function(appointment) { %>
+                                        <tr>
+                                            <td><strong><%= appointment.appointment_time %></strong></td>
+                                            <td>
+                                                <strong><%= appointment.student_name %></strong>
+                                                <br><small>ID: <%= appointment.student_id %></small>
+                                            </td>
+                                            <td><%= appointment.service_name %></td>
+                                            <td><%= appointment.nurse_name || 'Not assigned' %></td>
+                                            <td>
+                                                <span class="badge bg-<%= appointment.status === 'scheduled' ? 'warning' : 'success' %>">
+                                                    <%= appointment.status %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="/nurse/consultation/<%= appointment.id %>" 
+                                                   class="btn btn-primary btn-sm">
+                                                    <%= appointment.status === 'scheduled' ? 'Start' : 'View' %>
+                                                </a>
+                                                <a href="/nurse/student-history/<%= appointment.student_id %>" 
+                                                   class="btn btn-outline-info btn-sm">
+                                                    History
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted">No appointments scheduled for today</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <p>Total Appointments: <strong><%= appointments ? appointments.length : 0 %></strong></p>
+                    <p>Pending: <strong><%= appointments ? appointments.filter(a => a.status === 'scheduled').length : 0 %></strong></p>
+                    <p>Completed: <strong><%= appointments ? appointments.filter(a => a.status === 'completed').length : 0 %></strong></p>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6>Today's Notes</h6>
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control" rows="5" placeholder="Add notes for today..."></textarea>
+                    <button class="btn btn-outline-primary btn-sm mt-2">Save Notes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') -%>

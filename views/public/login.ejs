@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - UMP Health Clinic</title>
+    <link rel="stylesheet" href="/styles/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/University_of_Mpumalanga_logo.svg/1200px-University_of_Mpumalanga_logo.svg.png" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="content-wrapper">
+                <div class="device-mockup">
+                    <div class="device-frame">
+                        <div class="device-screen">
+                            <div class="app-preview">
+                                <div class="colorful-illustration">
+                                    <div class="illustration-element red"></div>
+                                    <div class="illustration-element orange"></div>
+                                    <div class="illustration-element yellow"></div>
+                                    <div class="illustration-element green"></div>
+                                    <div class="illustration-element blue"></div>
+                                </div>
+                                <div class="preview-text">
+                                    <h3>UMP Health Clinic</h3>
+                                    <p>Connect with your digital clinic</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="document-preview">
+                        <div class="doc-header">
+                            <h4>UMP Health Clinic</h4>
+                            <div class="doc-subtitle"> login</div>
+                        </div>
+                        <div class="doc-content">
+                            <div class="doc-button"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <h2>University Of Mpumalanga</h2>
+                    <p> Committed to developing as an African university providing leadership in knowledge creation.</p>
+                </div>
+                
+                <div class="pagination-dots">
+                    <span class="dot"></span>
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="login-form-wrapper">
+                <%- include('../partials/flash-messages') -%>
+                <% if (typeof registered !== 'undefined' && registered) { %>
+                    <div class="alert alert-success">Registration successful! Please login.</div>
+                <% } %>
+                
+                <div class="login-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/University_of_Mpumalanga_logo.svg/1200px-University_of_Mpumalanga_logo.svg.png" alt="">
+                    <p>Welcome to UMP Health Clinic</p>
+                </div>
+
+                <form  action="/auth/login" method="post" class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Student Number or Email</label>
+                        <input type="text" id="student_number" name="student_number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password">
+                    </div>
+
+                    <div class="form-group">
+                        <a href="#" class="create-account" style="text-decoration: none; font-size: small; color: rgb(0, 47, 255);">Forget password?</a>
+                    </div>
+                    <button type="submit" class="sign-in-btn">Sign In</button>
+
+                    <div class="create-account">
+                        <span">New UMP Health Clinic? <a href="/auth/register" style="text-decoration: none; color: rgb(0, 47, 255);">Create Account</a></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

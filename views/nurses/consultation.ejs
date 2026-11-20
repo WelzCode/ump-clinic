@@ -1,0 +1,145 @@
+<%- include('../partials/header', { title: 'Patient Consultation' }) -%>
+<%- include('../partials/navigation') -%>
+<%- include('../partials/flash-messages') -%>
+
+<div class="container mt-4">
+    <h2>Patient Consultation</h2>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Patient Information</h5>
+                </div>
+                <div class="card-body">
+                    <h6><%= appointment.student_name %></h6>
+                    <p class="mb-1"><strong>Student ID:</strong> <%= appointment.student_id %></p>
+                    <p class="mb-1"><strong>Appointment:</strong> <%= appointment.service_name %></p>
+                    <p class="mb-1"><strong>Time:</strong> <%= appointment.appointment_time %></p>
+                    
+                    <% if (appointment.allergies) { %>
+                        <div class="alert alert-warning mt-2">
+                            <strong>Allergies:</strong> <%= appointment.allergies %>
+                        </div>
+                    <% } %>
+                    
+                    <% if (appointment.medical_history) { %>
+                        <div class="alert alert-info mt-2">
+                            <strong>Medical History:</strong> <%= appointment.medical_history %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-outline-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#prescriptionModal">
+                        Add Prescription
+                    </button>
+                    <a href="/nurse/student-history/<%= appointment.student_id %>" class="btn btn-outline-info btn-sm w-100">
+                        Full Medical History
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Consultation Notes</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/nurse/update-records/<%= appointment.id %>" method="POST">
+                        <div class="mb-3">
+                            <label for="symptoms" class="form-label">Symptoms Presented</label>
+                            <textarea class="form-control" id="symptoms" name="symptoms" rows="3" 
+                                      placeholder="Describe the symptoms reported by the patient..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="diagnosis" class="form-label">Diagnosis</label>
+                            <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" 
+                                      placeholder="Enter diagnosis..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="treatment" class="form-label">Treatment Provided</label>
+                            <textarea class="form-control" id="treatment" name="treatment" rows="3" 
+                                      placeholder="Describe treatment provided..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="consultation_notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control" id="consultation_notes" name="consultation_notes" rows="3" 
+                                      placeholder="Any additional notes or observations..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Complete Consultation</button>
+                        <a href="/nurse/patient-queue" class="btn btn-secondary">Back to Queue</a>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Recent History -->
+            <% if (records && records.length > 0) { %>
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Recent Medical History</h6>
+                    </div>
+                    <div class="card-body">
+                        <% records.slice(0, 3).forEach(function(record) { %>
+                            <div class="border-bottom pb-2 mb-2">
+                                <small class="text-muted">
+                                    <%= new Date(record.record_date).toLocaleDateString() %> - 
+                                    <%= record.nurse_name %>
+                                </small>
+                                <% if (record.diagnosis) { %>
+                                    <br><strong>Diagnosis:</strong> <%= record.diagnosis %>
+                                <% } %>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Prescription Modal -->
+<div class="modal fade" id="prescriptionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Prescription</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/nurse/prescribe/<%= appointment.student_id %>" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="medication_name" class="form-label">Medication Name *</label>
+                        <input type="text" class="form-control" id="medication_name" name="medication_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dosage" class="form-label">Dosage *</label>
+                        <input type="text" class="form-control" id="dosage" name="dosage" 
+                               placeholder="e.g., 500mg twice daily" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea class="form-control" id="instructions" name="instructions" 
+                                  placeholder="Special instructions..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Prescription</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') -%>

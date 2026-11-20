@@ -1,0 +1,136 @@
+<%- include('../partials/header', { title: 'Student Medical History' }) -%>
+<%- include('../partials/navigation') -%>
+<%- include('../partials/flash-messages') -%>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Medical History - <%= student.full_name %></h2>
+        <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Student Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> <%= student.full_name %></p>
+                    <p><strong>Student ID:</strong> <%= student.student_number %></p>
+                    <p><strong>Email:</strong> <%= student.email %></p>
+                    
+                    <% if (student.phone) { %>
+                        <p><strong>Phone:</strong> <%= student.phone %></p>
+                    <% } %>
+                    
+                    <% if (student.allergies) { %>
+                        <div class="alert alert-warning">
+                            <strong>Allergies:</strong> <%= student.allergies %>
+                        </div>
+                    <% } %>
+                    
+                    <% if (student.medical_history) { %>
+                        <div class="alert alert-info">
+                            <strong>Medical History:</strong> <%= student.medical_history %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <!-- Medical Records -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Consultation Records</h5>
+                </div>
+                <div class="card-body">
+                    <% if (records && records.length > 0) { %>
+                        <div class="accordion" id="recordsAccordion">
+                            <% records.forEach(function(record, index) { %>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading<%= index %>">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                                data-bs-target="#collapse<%= index %>">
+                                            <%= new Date(record.record_date).toLocaleDateString() %> - 
+                                            <%= record.nurse_name %>
+                                            <% if (record.diagnosis) { %>
+                                                - <%= record.diagnosis %>
+                                            <% } %>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse<%= index %>" class="accordion-collapse collapse" 
+                                         data-bs-parent="#recordsAccordion">
+                                        <div class="accordion-body">
+                                            <% if (record.symptoms) { %>
+                                                <h6>Symptoms:</h6>
+                                                <p><%= record.symptoms %></p>
+                                            <% } %>
+                                            <% if (record.diagnosis) { %>
+                                                <h6>Diagnosis:</h6>
+                                                <p><%= record.diagnosis %></p>
+                                            <% } %>
+                                            <% if (record.treatment) { %>
+                                                <h6>Treatment:</h6>
+                                                <p><%= record.treatment %></p>
+                                            <% } %>
+                                            <% if (record.consultation_notes) { %>
+                                                <h6>Notes:</h6>
+                                                <p><%= record.consultation_notes %></p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted">No medical records found</p>
+                    <% } %>
+                </div>
+            </div>
+            
+            <!-- Prescriptions -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Prescription History</h5>
+                </div>
+                <div class="card-body">
+                    <% if (prescriptions && prescriptions.length > 0) { %>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Medication</th>
+                                        <th>Dosage</th>
+                                        <th>Instructions</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% prescriptions.forEach(function(prescription) { %>
+                                        <tr>
+                                            <td><strong><%= prescription.medication_name %></strong></td>
+                                            <td><%= prescription.dosage %></td>
+                                            <td><%= prescription.instructions || 'N/A' %></td>
+                                            <td><%= new Date(prescription.prescribed_date).toLocaleDateString() %></td>
+                                            <td>
+                                                <span class="badge bg-<%= prescription.is_active ? 'success' : 'secondary' %>">
+                                                    <%= prescription.is_active ? 'Active' : 'Inactive' %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } else { %>
+                        <p class="text-muted">No prescription history found</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') -%>

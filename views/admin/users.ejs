@@ -1,0 +1,109 @@
+<%- include('../partials/header', { title: 'Manage Users' }) -%>
+<%- include('../partials/navigation') -%>
+<%- include('../partials/flash-messages') -%>
+
+<div class="container mt-4">
+    <h2>Manage Users</h2>
+    
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="role" class="form-label">Filter by Role</label>
+                    <select class="form-select" id="role" name="role">
+                        <option value="all" <%= filters.role === 'all' ? 'selected' : '' %>>All Roles</option>
+                        <option value="student" <%= filters.role === 'student' ? 'selected' : '' %>>Students</option>
+                        <option value="nurse" <%= filters.role === 'nurse' ? 'selected' : '' %>>Nurses</option>
+                        <option value="admin" <%= filters.role === 'admin' ? 'selected' : '' %>>Admins</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="<%= filters.search || '' %>" placeholder="Name, email, or student number">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <a href="/admin/users" class="btn btn-outline-secondary w-100">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <% if (users && users.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Student Number</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.forEach(function(user) { %>
+                                <tr>
+                                    <td><strong><%= user.full_name %></strong></td>
+                                    <td><%= user.student_number || 'N/A' %></td>
+                                    <td><%= user.email %></td>
+                                    <td>
+                                        <span class="badge bg-<%= user.role === 'admin' ? 'danger' : user.role === 'nurse' ? 'warning' : 'info' %>">
+                                            <%= user.role %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-<%= user.is_active ? 'success' : 'secondary' %>">
+                                            <%= user.is_active ? 'Active' : 'Inactive' %>
+                                        </span>
+                                    </td>
+                                    <td><%= new Date(user.created_at).toLocaleDateString() %></td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="/admin/users/<%= user.id %>/edit" class="btn btn-outline-primary">Edit</a>
+                                            <button class="btn btn-outline-<%= user.is_active ? 'warning' : 'success' %>"
+                                                    onclick="toggleUserStatus(<%= user.id %>, <%= user.is_active %>)">
+                                                <%= user.is_active ? 'Deactivate' : 'Activate' %>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="text-muted">No users found matching your criteria</p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleUserStatus(userId, isActive) {
+    if (confirm('Are you sure you want to ' + (isActive ? 'deactivate' : 'activate') + ' this user?')) {
+        fetch('/admin/users/' + userId + '/toggle-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
+    }
+}
+</script>
+
+<%- include('../partials/footer') -%>
